@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 
 import { db } from '@/lib/db';
 
-import { SnippetItemType } from '../types';
+import { GetAllSnippetFuncArgs, GetAllSnippetsReturnType, SnippetItemType } from '../types';
 
 export type CreateSnippetType = Prisma.Args<typeof db.snippets, 'create'>['data']
 
@@ -19,13 +19,21 @@ export const createSnippetAction = async (snippet: CreateSnippetType) => {
     }
 }
 
-export const getAllSnippetsAction = async (): Promise<SnippetItemType[]> =>  {
+export const getAllSnippetsAction = async ({page, limit = 6}: GetAllSnippetFuncArgs): Promise<GetAllSnippetsReturnType> =>  {
     try {
 
-        return db.snippets.findMany({
-                where: {
-                    isPublic: true
-                }, 
+        const skipRecords = (page - 1) * limit;
+        
+        const filters: any = {
+            isPublic: true,
+        }         
+
+        const records = await db.$transaction([
+            db.snippets.count({
+                where: filters
+            }),
+            db.snippets.findMany({
+                where: filters, 
                 include: {
                     author: {
                         select: {
@@ -36,11 +44,22 @@ export const getAllSnippetsAction = async (): Promise<SnippetItemType[]> =>  {
                 orderBy: {
                     createdAt: 'desc'
                 },
+                skip: skipRecords,
+                take: limit
             })
+        ])
+
+        return {
+            data: records[1],
+            totalPages: Math.ceil(records[0] / limit)
+        }
         
     } catch (err) {
         console.log(err)
-        return []
+        return {
+            data: [],
+            totalPages: 0
+        }
     }
 }
 

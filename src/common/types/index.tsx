@@ -1,3 +1,8 @@
+export type GetAllSnippetsReturnType = {
+  data: SnippetItemType[];
+  totalPages: number;
+};
+
 export type SnippetItemType = {
   id: string;
   title: string;
