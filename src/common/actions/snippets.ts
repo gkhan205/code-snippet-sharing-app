@@ -19,14 +19,34 @@ export const createSnippetAction = async (snippet: CreateSnippetType) => {
     }
 }
 
-export const getAllSnippetsAction = async ({page, limit = 6}: GetAllSnippetFuncArgs): Promise<GetAllSnippetsReturnType> =>  {
+export const getAllSnippetsAction = async ({page, searchText, language, limit = 6, }: GetAllSnippetFuncArgs): Promise<GetAllSnippetsReturnType> =>  {
     try {
 
         const skipRecords = (page - 1) * limit;
         
         const filters: any = {
             isPublic: true,
+            OR: [
+                {
+                    title: {
+                        contains: searchText,
+                        mode: 'insensitive'
+                    }
+                },
+                {
+                    description: {
+                        contains: searchText,
+                        mode: 'insensitive'
+                    }
+                }
+            ]
         }         
+
+        if(!!language) {
+            filters['language'] = language
+        }
+
+        
 
         const records = await db.$transaction([
             db.snippets.count({

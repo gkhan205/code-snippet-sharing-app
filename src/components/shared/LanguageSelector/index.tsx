@@ -30,9 +30,7 @@ export const LanguageSelector = ({ value, onChange }: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
 
   useEffect(() => {
-    if (!!value) {
-      setSelectedLanguage(value);
-    }
+    setSelectedLanguage(value || '');
   }, [value]);
 
   const allLanguages = useMemo(() => {

@@ -38,4 +38,6 @@ export type RemoveUrlQueryParams = {
 export type GetAllSnippetFuncArgs = {
   page: number;
   limit?: number;
+  searchText?: string;
+  language?: string;
 };
