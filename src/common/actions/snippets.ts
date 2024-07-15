@@ -19,6 +19,24 @@ export const createSnippetAction = async (snippet: CreateSnippetType) => {
     }
 }
 
+export const editSnippetAction = async (id: string, snippet: CreateSnippetType) => {
+    try {
+         await db.snippets.update({
+            where: {
+                id
+            }, 
+            data: snippet
+         })
+         
+         revalidatePath('/feed')
+         revalidatePath(`snippet/${id}`)
+         revalidatePath(`snippet/${id}/edit`)
+    } catch (error: any) {
+        console.error(error)
+        throw new Error(error)
+    }
+}
+
 export const getAllSnippetsAction = async ({page, searchText, language, limit = 6, }: GetAllSnippetFuncArgs): Promise<GetAllSnippetsReturnType> =>  {
     try {
 

@@ -15,7 +15,9 @@ export const Header = () => {
     <header className='bg-primary text-white p-3 drop-shadow gap-5'>
       <div className='container flex w-full items-center justify-between'>
         <nav className={cn('flex flex-1 items-center gap-5')}>
-          <h1>Code Share</h1>
+          <Link href='/'>
+            <h1>Code Share</h1>
+          </Link>
 
           <ul className={cn('flex items-center gap-5 ms-20')}>
             <li>
@@ -29,7 +31,14 @@ export const Header = () => {
               </Link>
             </li>
             <li>
-              <Link href='/create-snippet'>Create Snippet</Link>
+              <Link
+                href='/create-snippet'
+                className={cn({
+                  'font-bold': pathname.includes('/create-snippet'),
+                  'text-gray-400': !pathname.includes('/create-snippet'),
+                })}>
+                Create Snippet
+              </Link>
             </li>
           </ul>
         </nav>

@@ -20,6 +20,7 @@ export default async function FeedPage({ searchParams }: SearchParamsType) {
     page,
     searchText,
     language,
+    limit: 9,
   });
 
   return (

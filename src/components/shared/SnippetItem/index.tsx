@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { CalendarDays, Copy, Tag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCurrentUser } from '@/common/hooks/useCurrentUser';
 
 type Props = {
   snippet: SnippetItemType;
@@ -15,6 +16,8 @@ type Props = {
 };
 
 export const SnippetItem = ({ snippet, isDetailPage = false }: Props) => {
+  const { user } = useCurrentUser();
+
   const handleCopyCode = () => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(snippet.code);
@@ -74,6 +77,19 @@ export const SnippetItem = ({ snippet, isDetailPage = false }: Props) => {
               <Copy />
             </Button>
           </div>
+        )}
+
+        {user.id === snippet.authorId && (
+          <Link
+            href={`/snippet/${snippet.id}/edit`}
+            className={cn(
+              'text-md bg-yellow-500 text-black px-5 py-2 rounded-md',
+              {
+                'ms-2': !isDetailPage,
+              }
+            )}>
+            Edit Snippet
+          </Link>
         )}
       </CardContent>
     </Card>
