@@ -5,6 +5,7 @@ import { DEFAULT_LOGIN_DIRECT, apiAuthPrefix, authRoutes, publicRoutes } from ".
 
 const {auth} = NextAuth(authConfig)
 
+// @ts-ignore
 export default auth((req) => {
     const {nextUrl} = req;
     const isLoggedIn: boolean = !!req.auth;
